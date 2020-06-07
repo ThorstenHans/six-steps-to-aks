@@ -1,0 +1,3 @@
+# Remove all Azure Resources
+
+az group delete -n hello-aks --no-wait --yes

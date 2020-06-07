@@ -1,0 +1,21 @@
+# Create Resource Group
+az group create -n hello-aks -l westeurope
+
+# Azure Container Registry
+
+ACR_NAME=thorstenhans
+# check name availability
+az acr check-name -n $ACR_NAME
+# create ACR
+az acr create -n $ACR_NAME -g hello-aks --admin-enabled false --sku Basic
+# store ACR ID in variable
+ACR_ID=$(az acr show -n $ACR_NAME -g hello-aks --query id -o tsv)
+
+# Azure Kubernetes Service
+az aks create -n aks-demo -g hello-aks --enable-managed-identity --attach-acr $ACR_ID --node-count 1
+
+# Install Kubectl
+az aks install-cli
+
+# Get cluster configuration
+az aks get-credentials -n aks-demo -g hello-aks
